@@ -8,7 +8,7 @@ import java.util.Date;
 
 public interface IArchivo {
 
-    String RUTA_DEFAULT = "./Data";
+    String RUTA_DEFAULT = "./src/Data";
 
     String SEPARADOR_COLUMNA_DEFAULT = ",";
 

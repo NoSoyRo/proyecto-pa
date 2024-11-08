@@ -25,7 +25,10 @@ public class ArchivoCopiaTextoBuffered extends Archivo {
     public void copiar(String origen) {
         nombreArchivoOrigen = origen;
         nombreArchivoDestino = "copia_" + nombreArchivoOrigen;
-
+        // callibrating remove later
+        String currentDir = System.getProperty("user.dir");
+        System.out.println("Current dir using System:" + currentDir);
+        //
         objetoFile_archivoOrigen = new File(RUTA_DEFAULT, nombreArchivoOrigen);
 
         if (!verificarExistencia(objetoFile_archivoOrigen)) {
