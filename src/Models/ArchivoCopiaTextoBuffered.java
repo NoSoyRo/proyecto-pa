@@ -139,8 +139,6 @@ public class ArchivoCopiaTextoBuffered extends Archivo {
             tiempoFin = System.nanoTime();
             archivoOrigen.close();
             arr = new int[] {cuentaLineas, cuentaCampos};
-            
-
         } catch (IOException e) {
             System.err.println(e);
         } finally {
