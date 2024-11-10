@@ -1,6 +1,7 @@
 package ProyectoFinal;
 
 import ProyectoFinal.src.Models.ArchivoCopiaTextoBuffered;
+import ProyectoFinal.src.Fabricas.FabricaChunks;
 
 public class Tests {
 
@@ -17,11 +18,19 @@ public class Tests {
         // works correctly
     }
 
+    public void testNChunks() {
+        FabricaChunks fabrica = new FabricaChunks("covid.csv");
+        fabrica.manufacturaChunks(3);
+    }
+
     public static void main(String[] args) {
         Tests tests = new Tests();
-        System.out.println("\n Unit test 1: testArchivoCopiaTextoBufferedCopiaOrigen \n");
-        tests.testArchivoCopiaTextoBufferedCopiaOrigen();
-        System.out.println("\n Unit test 2: testArchivoObtenDimesniones \n");
-        tests.testArchivoObtenDimesniones();
+        // System.out.println("\n Unit test 1: testArchivoCopiaTextoBufferedCopiaOrigen
+        // \n");
+        // tests.testArchivoCopiaTextoBufferedCopiaOrigen();
+        // System.out.println("\n Unit test 2: testArchivoObtenDimesniones \n");
+        // tests.testArchivoObtenDimesniones();D
+        System.out.println("\n Unit test 3: testNChunks \n");
+        tests.testNChunks();
     }
 }

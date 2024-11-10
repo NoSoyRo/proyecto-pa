@@ -4,7 +4,7 @@ cd /d %~dp0
 
 REM Compile the Java files
 echo compilando archivos
-javac -d out -sourcepath src src\Models\Archivo.java src\Models\ArchivoCopiaTextoBuffered.java src\Interfaces\IArchivo.java Tests.java
+javac -d out -sourcepath src src\Models\Archivo.java src\Models\ArchivoCopiaTextoBuffered.java src\Fabricas\FabricaChunks.java src\Interfaces\IArchivo.java Tests.java
 
 REM Check if compilation was successful
 if %errorlevel% equ 0 (

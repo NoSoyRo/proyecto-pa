@@ -1,12 +1,13 @@
 package ProyectoFinal.src.Interfaces;
 
 import java.io.*;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 public interface IArchivo {
+
+    String RUTA_DEFAULT_NCHUNKS = "./src/Data/NChunks";
 
     String RUTA_DEFAULT = "./src/Data";
 
