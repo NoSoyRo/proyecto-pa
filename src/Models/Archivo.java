@@ -42,7 +42,7 @@ public class Archivo implements IArchivo {
     }
 
     public void crearArchivo(File archivo) {
-        // por que recibir un objeto tipo File todo change it
+        // por que recibir un objeto tipo File all change it
         try {
             /* Creamos un archivo */
             if (archivo.createNewFile()) {

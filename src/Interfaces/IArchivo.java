@@ -13,11 +13,11 @@ public interface IArchivo {
 
     String SEPARADOR_COLUMNA_DEFAULT = ",";
 
-    String ATENCION = "��� ATENCION !!! ";
+    String ATENCION = "--- ATENCION !!! ";
 
-    String NO_EXISTE = "No se encontr� el archivo:";
+    String NO_EXISTE = "No se encontro el archivo:";
 
-    String FALTO_NOMBRE = "Falt� el nombre del archivo ";
+    String FALTO_NOMBRE = "Falto el nombre del archivo ";
 
     void copiar(String origen);
 
@@ -101,7 +101,7 @@ public interface IArchivo {
         System.out.println(
                 "##################################################################################################");
         System.out.println("Descripcion:");
-        System.out.printf("\t Se emplea la clase %s que a la vez, es una implementaci�n de la clase %s  \n", clase1,
+        System.out.printf("\t Se emplea la clase %s que a la vez, es una implementacion de la clase %s  \n", clase1,
                 clase2);
         System.out.println(
                 "\t -----------------------------------------------------------------------------------------\n");
@@ -111,7 +111,7 @@ public interface IArchivo {
         System.out.println(
                 "############################################################################################");
         System.out.println("Descripcion:");
-        System.out.printf("\t Se emplea la clase %s que a la vez, es una implementaci�n \n", clase1);
+        System.out.printf("\t Se emplea la clase %s que a la vez, es una implementacion \n", clase1);
         System.out.printf("\t de las clases %s   y  %s \n", clase2, clase3);
         System.out.println("\t --------------------------------------------------------------------------\n");
     }
