@@ -1,7 +1,8 @@
 package ProyectoFinal.src;
 
-import ProyectoFinal.src.Fabricas.FabricaChunks;
-import ProyectoFinal.src.Models.Manager;
+import ProyectoFinal.src.Fabricas.*;
+import ProyectoFinal.src.Interfaces.*;
+import ProyectoFinal.src.Models.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +29,6 @@ public class ProcesoMain {
 
         // Crear el Manager y procesar los chunks
         Manager manager = new Manager(chunks, numWorkers);
-        manager.startProcessing();
+        manager.comienzaProceso();
     }
 }

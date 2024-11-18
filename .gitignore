@@ -1,0 +1,7 @@
+# Default ignored files
+/shelf/
+workspace.xml
+proyecto-pa.iml
+/src/Ejercicios/
+/src/Data/NChunks/
+.idea/

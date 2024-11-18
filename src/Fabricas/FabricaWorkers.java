@@ -1,24 +1,12 @@
 package ProyectoFinal.src.Fabricas;
 
-import ProyectoFinal.src.Interfaces.TareaWorker;
-
+import ProyectoFinal.src.Interfaces.*;
+import ProyectoFinal.src.Models.*;
 import java.io.File;
 
-public class FabricaWorkers implements TareaWorker{
-    private File chunkFile;
-
-    public FabricaWorkers(File chunkFile) {
-        this.chunkFile = chunkFile;
-    }
-
+public class FabricaWorkers implements IFabricaWorker {
     @Override
-    public void ejecutarTarea() {
-        System.out.println("Procesando chunk: " + chunkFile.getName());
-        // lógica para procesar el archivo.
-    }
-
-    @Override
-    public void run() {
-        ejecutarTarea();
+    public IWorker creaWorker(File file) {
+        return new Worker(file); 
     }
 }
