@@ -2,6 +2,9 @@ package ProyectoFinal.src.Models;
 
 import ProyectoFinal.src.Interfaces.*;
 //import ProyectoFinal.src.Fabricas.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.io.File;
 
 
@@ -20,6 +23,19 @@ public class Worker implements IWorker{
     }
 
     @Override
-    public void buscaStringEnColumna(){
-    };
+    public List<String> buscaStringEnColumnaN(int N) {
+        List<String> resultados = new ArrayList<>();
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+                String[] columnas = linea.split(","); // Separador, puede ajustarse
+                if (N >= 0 && N < columnas.length) {
+                    resultados.add(columnas[N]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultados;
+    }
 }
