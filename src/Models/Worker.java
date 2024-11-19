@@ -28,7 +28,7 @@ public class Worker implements IWorker{
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String linea = scanner.nextLine();
-                String[] columnas = linea.split(","); // Separador, puede ajustarse
+                String[] columnas = linea.split(","); // Separador ','
                 if (N >= 0 && N < columnas.length) {
                     resultados.add(columnas[N]);
                 }
