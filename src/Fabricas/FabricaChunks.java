@@ -37,6 +37,7 @@ public class FabricaChunks extends ArchivoCopiaTextoBuffered {
         }
         int cuentaChunksCreados = 1;
         int cuentaLineas = 0;
+        String header = null;
 
         int[] dimensiones = getDimensiones(origen);
 
@@ -49,11 +50,19 @@ public class FabricaChunks extends ArchivoCopiaTextoBuffered {
             Integer tamanioChunk = (Integer) dimensiones[0] / numeroChunks;
             System.out.println(tamanioChunk);
             tiempoInicio = System.nanoTime();
+
+            // Leer el header
+            header = archivoOrigen.readLine();
+            if (header == null) {
+                throw new IOException("El archivo está vacío o no tiene encabezado.");
+            }
+
             /* Lee el contenido del archivoOrigen y lo escribe en archivoDestino */
             nombreArchivoDestinoAux = nombreArchivoDestino + Integer.toString(cuentaChunksCreados) + ".csv";
             objetoFile_archivoDestino = new File(RUTA_DEFAULT_NCHUNKS, nombreArchivoDestinoAux);
             crearArchivo(objetoFile_archivoDestino);
             archivoDestino = new BufferedWriter(new FileWriter(objetoFile_archivoDestino));
+            archivoDestino.write(header + "\n");
             while ((linea = archivoOrigen.readLine()) != null) {
                 if (cuentaLineas == 0) {
                     System.out.println("En headings");
@@ -71,12 +80,17 @@ public class FabricaChunks extends ArchivoCopiaTextoBuffered {
                     objetoFile_archivoDestino = new File(RUTA_DEFAULT_NCHUNKS, nombreArchivoDestinoAux);
                     crearArchivo(objetoFile_archivoDestino);
                     archivoDestino = new BufferedWriter(new FileWriter(objetoFile_archivoDestino));
+                    // para agregar el header a cada copia.
+                    archivoDestino.write(header + "\n");
+
                     cuentaLineas = 1;
                     System.out.println(nombreArchivoDestino);
                 }
+
                 archivoDestino.write(linea + "\n");
+
                 // System.out.println(linea);
-                cuentaLineas = cuentaLineas + 1;
+                cuentaLineas++;
                 /* Copia TODO el archivo igual, descomente la sig linea si deseo observar */
                 // archivoDestino.write(linea + "\n");
                 /* Copia campos seleccionados, descomente las sig 2 lineas si deseo observar */
