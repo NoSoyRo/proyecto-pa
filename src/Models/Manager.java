@@ -3,8 +3,10 @@ package ProyectoFinal.src.Models;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.Map;
 
 import ProyectoFinal.src.Fabricas.*;
 import ProyectoFinal.src.Interfaces.*;
@@ -16,10 +18,12 @@ public class Manager {
     private int numWorkers;
     private IFabricaWorker fabricaWorker;
     private ExecutorService executorService;
+    private ConcurrentHashMap<String, Map<String, Object>> resultadosGlobales;
 
     public Manager(List<File> chunks, int numWorkers) {
         this.numWorkers = numWorkers;
         this.workers = new ArrayList<>();
+        this.resultadosGlobales = new ConcurrentHashMap<>();
 
         // Metodo para crear los Workers
         crearWorkers(chunks);
@@ -57,14 +61,21 @@ public class Manager {
 
 
     public void comienzaProceso() {
+
         for (IWorker worker : workers) {
-            executorService.execute(worker);
+            executorService.execute(() -> {
+                worker.run(); // Ejecutar el Worker
+                resultadosGlobales.put(worker.toString(), worker.getResultados()); // Recoger resultados
+            });
         }
         executorService.shutdown();
         while (!executorService.isTerminated()) {
             // Espera a que todos los workers finalicen
         }
-        System.out.println("Todos los chunks han sido procesados.");
+        System.out.println("Resultados globales:");
+        resultadosGlobales.forEach((worker, resultados) -> {
+            System.out.println("Worker: " + worker);
+            System.out.println("Resultados: " + resultados);
+        });
     }
-
 }
