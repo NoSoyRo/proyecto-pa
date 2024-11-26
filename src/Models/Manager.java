@@ -1,12 +1,20 @@
 package ProyectoFinal.src.Models;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Map;
+import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ProyectoFinal.src.Fabricas.*;
 import ProyectoFinal.src.Interfaces.*;
@@ -18,19 +26,17 @@ public class Manager {
     private int numWorkers;
     private IFabricaWorker fabricaWorker;
     private ExecutorService executorService;
-    private ConcurrentHashMap<String, Map<String, Object>> resultadosGlobales;
 
     public Manager(List<File> chunks, int numWorkers) {
         this.numWorkers = numWorkers;
         this.workers = new ArrayList<>();
-        this.resultadosGlobales = new ConcurrentHashMap<>();
-
         // Metodo para crear los Workers
         crearWorkers(chunks);
         // Seleccionar el tipo de hilos desde el menú
         int threadOption = MenuTerminal.mostrarMenuSeleccionHilos();
         configurarExecutorService(threadOption);
     }
+
 
     private void crearWorkers(List<File> chunks) {
         this.fabricaWorker = new FabricaWorkers();
@@ -59,23 +65,58 @@ public class Manager {
         }
     }
 
-
     public void comienzaProceso() {
 
         for (IWorker worker : workers) {
-            executorService.execute(() -> {
-                worker.run(); // Ejecutar el Worker
-                resultadosGlobales.put(worker.toString(), worker.getResultados()); // Recoger resultados
-            });
+            executorService.execute(worker);
         }
         executorService.shutdown();
         while (!executorService.isTerminated()) {
             // Espera a que todos los workers finalicen
         }
-        System.out.println("Resultados globales:");
-        resultadosGlobales.forEach((worker, resultados) -> {
-            System.out.println("Worker: " + worker);
-            System.out.println("Resultados: " + resultados);
-        });
+        System.out.println("Procesamiento finalizado.");
+        escribirResultadosEnArchivo();
+//        if (archivoResultados != null) {
+//            procesarResultados();
+//        } else {
+//            System.err.println("No se pudo encontrar el archivo de resultados. Verifique la ejecución de los Workers.");
+//        }
+    }
+
+    private void escribirResultadosEnArchivo() {
+        System.out.println("\nEscribiendo resultados en el archivo...");
+        Map<String, Map<String, Object>> resultadosGlobales = Worker.getResultadosGlobales();
+
+        try {
+            // Crear el archivo en el directorio abuelo
+            File directorioAbuelo = workers.get(0).getArchivoChunk().getParentFile().getParentFile();
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
+            File archivoResultados = new File(directorioAbuelo, "resultados_filtered(" + timestamp + ").csv");
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoResultados))) {
+                // Escribir encabezados
+                if (!resultadosGlobales.isEmpty()) {
+                    Map<String, Object> primerResultado = resultadosGlobales.values().iterator().next();
+                    String encabezados = String.join(",", primerResultado.keySet());
+                    writer.write("WorkerID," + encabezados + "\n");
+                }
+
+                // Escribir filas
+                for (Map.Entry<String, Map<String, Object>> entry : resultadosGlobales.entrySet()) {
+                    String workerId = entry.getKey();
+                    Map<String, Object> resultados = entry.getValue();
+                    StringBuilder fila = new StringBuilder(workerId + ",");
+                    resultados.values().forEach(valor -> fila.append(valor).append(","));
+                    writer.write(fila.substring(0, fila.length() - 1) + "\n"); // Eliminar última coma
+                }
+            }
+            System.out.println("Resultados escritos en: " + archivoResultados.getAbsolutePath());
+        } catch (IOException e) {
+            System.err.println("Error al escribir resultados en el archivo: " + e.getMessage());
+        }
+    }
+
+    private void procesarResultados() {
     }
 }
+
