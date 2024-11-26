@@ -27,16 +27,39 @@ public class Manager {
     private IFabricaWorker fabricaWorker;
     private ExecutorService executorService;
 
-    public Manager(List<File> chunks, int numWorkers) {
+    public Manager(List<File> chunks, int numWorkers, int threadOption) {
         this.numWorkers = numWorkers;
         this.workers = new ArrayList<>();
         // Metodo para crear los Workers
+        Worker.limpiarResultadosGlobales();
         crearWorkers(chunks);
         // Seleccionar el tipo de hilos desde el menú
-        int threadOption = MenuTerminal.mostrarMenuSeleccionHilos();
         configurarExecutorService(threadOption);
     }
 
+    public Manager(File archivoOriginal) {
+        this.workers = new ArrayList<>();
+        this.fabricaWorker = new FabricaWorkers();
+
+        // Crear un solo Worker usando la fábrica
+        Worker.limpiarResultadosGlobales();
+        IWorker worker = fabricaWorker.creaWorker(archivoOriginal);
+        workers.add(worker);
+
+        System.out.println("Worker creado para archivo: " + archivoOriginal.getName());
+    }
+
+    public void procesarSecuencial() {
+        if (workers.isEmpty()) {
+            System.err.println("No hay Workers creados para procesar.");
+            return;
+        }
+
+        System.out.println("Procesando de forma secuencial...");
+        IWorker worker = workers.get(0); // Obtener el único Worker
+        worker.run(); // Ejecutar directamente el Worker
+        escribirResultadosEnArchivo(); // Guardar resultados
+    }
 
     private void crearWorkers(List<File> chunks) {
         this.fabricaWorker = new FabricaWorkers();
@@ -90,7 +113,7 @@ public class Manager {
         try {
             // Crear el archivo en el directorio abuelo
             File directorioAbuelo = workers.get(0).getArchivoChunk().getParentFile().getParentFile();
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmm_ss").format(new Date());
             File archivoResultados = new File(directorioAbuelo, "resultados_filtered(" + timestamp + ").csv");
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoResultados))) {
