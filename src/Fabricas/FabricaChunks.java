@@ -29,6 +29,16 @@ public class FabricaChunks extends ArchivoCopiaTextoBuffered {
     }
 
     public void manufacturaChunks(int numeroChunks) {
+        File directorioChunks = new File(RUTA_DEFAULT_NCHUNKS);
+        if (!directorioChunks.exists()) {
+            if (directorioChunks.mkdir()) {
+                System.out.println("Directorio 'NChunks' creado en: " + directorioChunks.getAbsolutePath());
+            } else {
+                System.err.println("Error al crear el directorio 'NChunks'. Verifique los permisos.");
+                return;
+            }
+        }
+
         // //ToDo pensar algoritmo
         // ----------------------------------------------------------------------------------------------
         objetoFile_archivoOrigen = new File(RUTA_DEFAULT, origen);
