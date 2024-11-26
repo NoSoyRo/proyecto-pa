@@ -7,8 +7,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
-
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 public class Worker implements IWorker{
     private File chunk;
@@ -50,11 +51,15 @@ public class Worker implements IWorker{
         return resultadosGlobales;
     }
 
+    public synchronized static void limpiarResultadosGlobales() {
+        resultadosGlobales.clear();
+        System.out.println("HashMap de resultados globales limpiado.");
+    }
+
     @Override
     public File getArchivoChunk() {
         return chunk;
     }
-
 
     //Ej 1 de lo que puede hacer el Worker
     private int contarLineas() throws IOException {
@@ -127,65 +132,65 @@ public class Worker implements IWorker{
     }
 }
 
-private double calcularModa() throws IOException {
-    BufferedReader reader = new BufferedReader(new FileReader(chunk));
-    Map<Double, Integer> frecuencias = new HashMap<>();
-    String linea;
+    private double calcularModa() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(chunk));
+        Map<Double, Integer> frecuencias = new HashMap<>();
+        String linea;
 
-    while ((linea = reader.readLine()) != null) {
-        try {
-            double numero = Double.parseDouble(linea.trim()); // Convertir a Double
-            frecuencias.put(numero, frecuencias.getOrDefault(numero, 0) + 1);
-        } catch (NumberFormatException e) {
-            // Ignorar líneas no numéricas
+        while ((linea = reader.readLine()) != null) {
+            try {
+                double numero = Double.parseDouble(linea.trim()); // Convertir a Double
+                frecuencias.put(numero, frecuencias.getOrDefault(numero, 0) + 1);
+            } catch (NumberFormatException e) {
+                // Ignorar líneas no numéricas
+            }
         }
-    }
-    reader.close();
+        reader.close();
 
-    // Calcular la moda
-    Double moda = null;
-    int maxFrecuencia = 0;
+        // Calcular la moda
+        Double moda = null;
+        int maxFrecuencia = 0;
 
-    for (Map.Entry<Double, Integer> entry : frecuencias.entrySet()) {
-        if (entry.getValue() > maxFrecuencia) {
-            moda = entry.getKey();
-            maxFrecuencia = entry.getValue();
+        for (Map.Entry<Double, Integer> entry : frecuencias.entrySet()) {
+            if (entry.getValue() > maxFrecuencia) {
+                moda = entry.getKey();
+                maxFrecuencia = entry.getValue();
+            }
         }
+
+        return (moda != null) ? moda : Double.NaN; // Si no hay moda, devuelve NaN
     }
 
-    return (moda != null) ? moda : Double.NaN; // Si no hay moda, devuelve NaN
-}
 
-
-private String calcularModa(boolean esTextual) throws IOException {
-    if (!esTextual) {
-        throw new IllegalArgumentException("Usa este método solo para calcular moda textual.");
-    }
-
-    BufferedReader reader = new BufferedReader(new FileReader(chunk));
-    Map<String, Integer> frecuencias = new HashMap<>();
-    String linea;
-
-    // Leer línea por línea
-    while ((linea = reader.readLine()) != null) {
-        linea = linea.trim();
-        if (!linea.isEmpty()) {
-            frecuencias.put(linea, frecuencias.getOrDefault(linea, 0) + 1);
+    private String calcularModa(boolean esTextual) throws IOException {
+        if (!esTextual) {
+            throw new IllegalArgumentException("Usa este método solo para calcular moda textual.");
         }
-    }
-    reader.close();
 
-    // Calcular la moda
-    String moda = null;
-    int maxFrecuencia = 0;
+        BufferedReader reader = new BufferedReader(new FileReader(chunk));
+        Map<String, Integer> frecuencias = new HashMap<>();
+        String linea;
 
-    for (Map.Entry<String, Integer> entry : frecuencias.entrySet()) {
-        if (entry.getValue() > maxFrecuencia) {
-            moda = entry.getKey();
-            maxFrecuencia = entry.getValue();
+        // Leer línea por línea
+        while ((linea = reader.readLine()) != null) {
+            linea = linea.trim();
+            if (!linea.isEmpty()) {
+                frecuencias.put(linea, frecuencias.getOrDefault(linea, 0) + 1);
+            }
         }
-    }
+        reader.close();
 
-    return (moda != null) ? moda : "No hay moda"; // Si no hay moda, devuelve un mensaje
-}
+        // Calcular la moda
+        String moda = null;
+        int maxFrecuencia = 0;
+
+        for (Map.Entry<String, Integer> entry : frecuencias.entrySet()) {
+            if (entry.getValue() > maxFrecuencia) {
+                moda = entry.getKey();
+                maxFrecuencia = entry.getValue();
+            }
+        }
+
+        return (moda != null) ? moda : "No hay moda"; // Si no hay moda, devuelve un mensaje
+    }
 }
