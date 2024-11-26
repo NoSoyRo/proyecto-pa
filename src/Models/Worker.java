@@ -50,6 +50,7 @@ public class Worker implements IWorker{
         return chunk;
     }
 
+    public void buscaStringEnColumna(){}
 
     //Ej 1 de lo que puede hacer el Worker
     private int contarLineas() throws IOException {

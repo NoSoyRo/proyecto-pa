@@ -5,5 +5,6 @@ import java.io.File;
 import java.util.Map;
 
 public interface IWorker extends Runnable{
+    void buscaStringEnColumna();
     File getArchivoChunk();
 }
